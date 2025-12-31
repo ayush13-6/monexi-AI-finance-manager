@@ -10,13 +10,11 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-
 export const metadata = {
-  title: 'Monexi | Intelligence Suite',
-  description: 'AI-powered budgeting and real-time market tracking.',
+  title: 'Monexi | AI Finance Intelligence',
+  description: 'Master your money with smart budgeting and real-time market tracking. The future of digital finance is here.',
   icons: {
-    icon: '/icon.png', 
-    apple: '/icon.png', 
+    icon: '/icon.svg', // Agar aapne icon.svg rakha hai toh wahi likhein
   },
 }
 

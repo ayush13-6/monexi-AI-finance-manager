@@ -64,13 +64,12 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          // Line 72 se 77 ka code
-<button onClick={() => onNavigate("home")} className="flex items-center gap-2 group">
-  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg gradient-accent flex items-center justify-center">
-    <span className="text-primary-foreground font-bold text-lg md:text-xl">M</span> {/* Change 'M' */}
-  </div>
-  <span className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Monexi</span> {/* Change Name */}
-</button>
+          <button onClick={() => onNavigate("home")} className="flex items-center gap-2 group">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg gradient-accent flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg md:text-xl">M</span>
+            </div>
+            <span className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Monexi</span>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
