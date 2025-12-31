@@ -7,7 +7,7 @@ import {
   Sparkles, Ticket, Utensils, TrainFront, Globe, Lock // 👈 Yahan 'Lock' add kar diya
 } from "lucide-react"
 
-import { useState, useMemo, useEffect, useCallback, useRef } from "react"
+import { useState, useMemo, useEffect, useCallback, useRef, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -156,7 +156,7 @@ const DEMO_DATA = {
   ]
 };
 // FIX: Exported as a NAMED export to match your page.tsx import
-export function ToolsPage() {
+function ToolsContent() {
   const searchParams = useSearchParams()
   const defaultTab = searchParams ? (searchParams.get("tab") === "sip" ? "sip" : "market") : "market"
   const [transactions, setTransactions] = useState<any[]>([]); // Data store karne ke liye
@@ -1629,5 +1629,13 @@ const data = await fetchRealStockPrice(searchSymbol)
         </Tabs>
       </div>
     </div>
+  )
+}
+// "default" hata diya gaya hai 👇
+export function ToolsPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-[#10b981]">Loading...</div>}>
+      <ToolsContent />
+    </Suspense>
   )
 }
