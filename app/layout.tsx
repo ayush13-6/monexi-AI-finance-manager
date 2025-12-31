@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Smart Budgeting. AI Advice. Real-time Market Tracking. Experience the future of personal finance management.",
     verification: {
-      google: 'google07b1f9d6cc1d78c5', 
+      google: 'WVS6iIGzckZZXfDCVwKiELDlegqRuY4NWlhEkfsN5tM',
     },
     generator: "v0.app",
 }
