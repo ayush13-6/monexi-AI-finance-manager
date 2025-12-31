@@ -17,7 +17,7 @@ export const metadata = {
     google: 'google07b1f9d6cc1d78c5', 
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon.svg',
   },
 }
 
