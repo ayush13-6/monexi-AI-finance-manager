@@ -65,9 +65,8 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <button onClick={() => onNavigate("home")} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg gradient-accent flex items-center justify-center overflow-hidden">
-              
-              <img src="/icon.svg" alt="M" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg gradient-accent flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg md:text-xl">M</span>
             </div>
             <span className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Monexi</span>
           </button>
