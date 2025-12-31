@@ -10,11 +10,14 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-export const metadata: Metadata = {
-  title: "Monexi - Next Gen Personal Finance",
-  description:
-    "Smart Budgeting. AI Advice. Real-time Market Tracking. Experience the future of personal finance management.",
-  generator: "v0.app",
+
+export const metadata = {
+  title: 'Monexi | Intelligence Suite',
+  description: 'AI-powered budgeting and real-time market tracking.',
+  icons: {
+    icon: '/icon.png', 
+    apple: '/icon.png', 
+  },
 }
 
 export const viewport: Viewport = {
