@@ -11,10 +11,13 @@ const inter = Inter({
 })
 
 export const metadata = {
-  title: 'Monexi | AI-Powered Finance Intelligence',
-  description: 'Master your money with smart budgeting, real-time market tracking, and AI financial analysis. The future of personal finance is here.',
+  title: 'Monexi | AI Finance Intelligence',
+  description: 'Master your money with smart budgeting and real-time market tracking.',
+  verification: {
+    google: 'google07b1f9d6cc1d78c5', 
+  },
   icons: {
-    icon: '/favicon.ico', 
+    icon: '/favicon.ico',
   },
 }
 
