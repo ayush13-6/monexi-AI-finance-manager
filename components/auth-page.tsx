@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Mail, Loader2, CheckCircle2, LockKeyhole, KeyRound, AlertCircle, Lock, ArrowLeft } from "lucide-react"
-
+import Link from "next/link";
 // --- CSS STYLES ---
 const styles = `
   .monexi-text {
@@ -292,6 +292,7 @@ export function AuthPage({ onAuthSuccess }: AuthPageProps) {
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className="min-h-screen w-full flex bg-[#000000] text-white font-sans overflow-hidden">
+       
         
         {/* --- LEFT SIDE: ANIMATION --- */}
         <div className="hidden lg:flex flex-[1.2] relative items-center justify-center bg-black overflow-hidden">
@@ -370,7 +371,9 @@ export function AuthPage({ onAuthSuccess }: AuthPageProps) {
                         <Button type="submit" disabled={loading}
                             className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all mt-1">
                             {loading ? <Loader2 className="animate-spin" /> : "Sign In"}
-                        </Button>
+                            </Button>
+
+
                     </form>
                   </TabsContent>
 
@@ -449,8 +452,19 @@ export function AuthPage({ onAuthSuccess }: AuthPageProps) {
                     )}
                   </TabsContent>
 
-                </Tabs>
+                  </Tabs>
 
+{/* --- BACK BUTTON: FORCE CLICKABLE VERSION --- */}
+<div className="mt-8 flex justify-center w-full relative z-[9999]"> 
+    <button 
+      type="button"
+      onClick={() => window.location.href = '/'}
+      className="inline-flex items-center gap-2 text-[10px] text-zinc-500 hover:text-emerald-400 transition-all font-black uppercase tracking-[0.2em] group cursor-pointer pointer-events-auto py-2 px-4"
+    >
+      <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" /> 
+      Back to Home
+    </button>
+</div>
                 <div className="mt-8 text-center">
                      <p className="text-[10px] text-zinc-700 uppercase tracking-widest font-semibold">
                          Secured by Monexi Protocol

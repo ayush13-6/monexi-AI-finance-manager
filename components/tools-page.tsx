@@ -496,34 +496,34 @@ const data = await fetchRealStockPrice(searchSymbol)
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-10">
-          <TabsList className="bg-white/5 border border-white/10 p-1 rounded-2xl flex h-auto gap-1 backdrop-blur-3xl shadow-2xl">
+        <TabsList className="bg-white/5 border border-white/10 p-1 rounded-2xl flex h-auto gap-1 backdrop-blur-3xl shadow-2xl overflow-x-auto whitespace-nowrap scrollbar-hide">
             <TabsTrigger
               value="market"
-              className="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
+              className="px-3 md:px-8 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
             >
               Market
             </TabsTrigger>
             <TabsTrigger
               value="sip"
-              className="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
+              className="px-3 md:px-8 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
             >
               SIP Engine
             </TabsTrigger>
             <TabsTrigger
               value="trip"
-              className="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
+              className="px-3 md:px-8 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-sm uppercase tracking-tighter data-[state=active]:bg-[#10b981] data-[state=active]:text-black transition-all shadow-lg"
             >
               Trip Planner
             </TabsTrigger>
             <TabsTrigger
               value="tax"
-              className="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-tighter transition-all"
+              className="px-3 md:px-8 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-sm uppercase tracking-tighter transition-all"
             >
               Tax
             </TabsTrigger>
             <TabsTrigger
               value="analysis"
-              className="px-8 py-3 rounded-xl font-black text-sm uppercase tracking-tighter transition-all"
+              className="px-3 md:px-8 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-sm uppercase tracking-tighter transition-all"
             >
               Analysis
             </TabsTrigger>
@@ -687,6 +687,7 @@ const data = await fetchRealStockPrice(searchSymbol)
           {/* SIP Content */}
           <TabsContent value="sip" className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="grid lg:grid-cols-3 gap-8">
+              {/* SLIDER SECTION (LEFT) */}
               <div className="bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-10 space-y-12 shadow-2xl">
                 <div className="space-y-2">
                   <h3 className="font-black text-2xl italic text-[#10b981] flex items-center gap-3 tracking-tighter">
@@ -742,41 +743,44 @@ const data = await fetchRealStockPrice(searchSymbol)
                 </div>
               </div>
 
+              {/* MAIN CONTENT (RIGHT) */}
               <div className="lg:col-span-2 space-y-8">
-                <div className="bg-[#080808]/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-12 flex flex-col md:flex-row items-center gap-12 shadow-2xl relative overflow-hidden">
+                
+                {/* Fixed Responsive Chart Card */}
+                <div className="bg-[#080808]/90 backdrop-blur-3xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 shadow-2xl relative overflow-hidden">
                   <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#10b981]/5 blur-[120px] rounded-full" />
 
-                  <div className="flex-1 text-center md:text-left relative z-10">
+                  <div className="flex-1 text-center md:text-left relative z-10 w-full">
                     <p className="text-[10px] font-black text-gray-600 uppercase mb-4 tracking-[0.5em]">
                       Total Maturity Projection
                     </p>
-                    <h2 className="text-7xl font-black text-white tracking-tighter mb-12 tabular-nums leading-none">
+                    <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6 md:mb-12 tabular-nums leading-none break-all">
                       ₹{Math.round(sipResult.total).toLocaleString("en-IN")}
                     </h2>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-white/5 p-8 rounded-[2rem] border border-white/5 shadow-xl">
-                        <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Principal</p>
-                        <p className="text-3xl font-black tabular-nums tracking-tighter">
+                    <div className="grid grid-cols-2 gap-3 md:gap-4">
+                      <div className="bg-white/5 p-4 md:p-8 rounded-2xl md:rounded-[2rem] border border-white/5 shadow-xl">
+                        <p className="text-[9px] md:text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Principal</p>
+                        <p className="text-lg md:text-3xl font-black tabular-nums tracking-tighter break-all">
                           ₹{sipResult.invested.toLocaleString()}
                         </p>
                       </div>
-                      <div className="bg-[#10b981]/10 p-8 rounded-[2rem] border border-[#10b981]/20 shadow-xl">
-                        <p className="text-[10px] uppercase text-[#10b981] font-black tracking-widest mb-1">Gains</p>
-                        <p className="text-3xl font-black text-[#10b981] tabular-nums tracking-tighter">
+                      <div className="bg-[#10b981]/10 p-4 md:p-8 rounded-2xl md:rounded-[2rem] border border-[#10b981]/20 shadow-xl">
+                        <p className="text-[9px] md:text-[10px] uppercase text-[#10b981] font-black tracking-widest mb-1">Gains</p>
+                        <p className="text-lg md:text-3xl font-black text-[#10b981] tabular-nums tracking-tighter break-all">
                           ₹{Math.round(sipResult.gains).toLocaleString()}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="w-64 h-64 relative group">
+                  <div className="w-56 h-56 md:w-64 md:h-64 relative group flex-shrink-0">
                     <div className="absolute inset-0 bg-[#10b981]/20 blur-[50px] rounded-full group-hover:bg-[#10b981]/30 transition-all duration-700" />
                     <ResponsiveContainer>
                       <PieChart>
                         <Pie
                           data={[{ v: sipResult.invested }, { v: sipResult.gains }]}
-                          innerRadius={80}
-                          outerRadius={105}
+                          innerRadius={70}
+                          outerRadius={95}
                           paddingAngle={10}
                           dataKey="v"
                           animationDuration={1500}
@@ -787,14 +791,15 @@ const data = await fetchRealStockPrice(searchSymbol)
                       </PieChart>
                     </ResponsiveContainer>
                     <div className="absolute inset-0 flex flex-col items-center justify-center font-black">
-                      <span className="text-[10px] text-gray-500 tracking-[0.3em] uppercase mb-1">Growth</span>
-                      <span className="text-4xl tabular-nums tracking-tighter">
+                      <span className="text-[9px] md:text-[10px] text-gray-500 tracking-[0.3em] uppercase mb-1">Growth</span>
+                      <span className="text-3xl md:text-4xl tabular-nums tracking-tighter">
                         {Math.round((sipResult.gains / sipResult.invested) * 100)}%
                       </span>
                     </div>
                   </div>
                 </div>
 
+                {/* Index Funds Cards */}
                 <div className="grid md:grid-cols-3 gap-6">
                   <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2.5rem] hover:border-blue-500/30 transition-all shadow-xl group">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">

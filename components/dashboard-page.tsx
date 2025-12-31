@@ -81,12 +81,12 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
   const [income, setIncome] = useState(50000)
   const [isSaving, setIsSaving] = useState(false)
   const [expenses, setExpenses] = useState<Record<string, number>>({
-    rent: 15000,
-    food: 8000,
-    transport: 3000,
-    subscriptions: 2000,
-    utilities: 2000,
-    other: 5000,
+    rent: 0,
+    food: 0,
+    transport: 0,
+    subscriptions: 0,
+    utilities: 0,
+    other: 0,
   })
   const [risk, setRisk] = useState("balanced")
   const [plan, setPlan] = useState<FinancialPlan | null>(null)
