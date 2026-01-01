@@ -72,6 +72,20 @@ export default function Home() {
         <main>
           <HeroSection onGetStarted={() => setCurrentPage("dashboard")} />
           <FeaturesSection />
+
+          {/* 👇 SEO Section Added Here 👇 */}
+          <section className="py-12 bg-black border-y border-white/10">
+            <div className="container mx-auto px-4 text-center max-w-3xl">
+              <h2 className="text-xl md:text-2xl font-bold mb-4 text-emerald-500">About Monexi</h2>
+              <p className="text-gray-400 leading-relaxed text-sm md:text-base">
+                Monexi is a next-generation personal finance application designed for the Indian market. 
+                Unlike water bottles or foreign funds with similar names, Monexi.in offers AI-powered 
+                budgeting, expense tracking, and real-time market insights specifically for personal wealth management.
+              </p>
+            </div>
+          </section>
+          {/* 👆 End of SEO Section 👆 */}
+
           <FaqSection />
           <Footer onNavigate={(page) => setCurrentPage(page as PageType)} />
         </main>
