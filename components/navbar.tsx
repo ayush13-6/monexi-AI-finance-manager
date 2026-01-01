@@ -59,6 +59,9 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
     { label: "AI Advisor", page: "ai-advisor" },
   ]
 
+  // Helper to get first letter
+  const userInitial = session?.user?.email?.charAt(0).toUpperCase() || "U"
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,22 +91,28 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
             ))}
           </div>
 
-          {/* CTA Button or Logout */}
+          {/* CTA Button or User Profile */}
           <div className="hidden md:flex items-center gap-3">
             {session ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground hidden lg:inline-block">
-                  {session.user?.email}
-                </span>
+              <div className="flex items-center gap-3 pl-4 border-l border-white/10">
+                {/* 👇 NEW AVATAR CODE START 👇 */}
+                <div 
+                  className="w-9 h-9 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-emerald-500/20 cursor-default"
+                  title={session.user?.email} // Mouse hover par email dikhega
+                >
+                  {userInitial}
+                </div>
+                {/* 👆 NEW AVATAR CODE END 👆 */}
+
                 <button
                   onClick={(e) => {
                     e.preventDefault()
                     handleLogout()
                   }}
-                  className="p-2 flex items-center justify-center text-muted-foreground hover:text-red-400 transition-colors bg-secondary/30 rounded-full"
+                  className="p-2 flex items-center justify-center text-muted-foreground hover:text-red-400 transition-colors bg-secondary/30 rounded-full hover:bg-red-500/10"
                   title="Logout"
                 >
-                  <LogOut size={20} />
+                  <LogOut size={18} />
                 </button>
               </div>
             ) : (
@@ -144,23 +153,31 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
                 </button>
               ))}
               {session ? (
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    setMobileMenuOpen(false)
-                  }}
-                  className="px-4 py-3 rounded-lg text-left font-medium text-red-500 hover:bg-red-500/10 flex items-center gap-2 mt-2"
-                >
-                  <LogOut size={18} />
-                  Logout
-                </button>
+                <div className="pt-2 mt-2 border-t border-white/5">
+                   <div className="px-4 py-2 flex items-center gap-3 text-sm text-gray-400">
+                      <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
+                        {userInitial}
+                      </div>
+                      <span className="truncate">{session.user?.email}</span>
+                   </div>
+                   <button
+                    onClick={() => {
+                      handleLogout()
+                      setMobileMenuOpen(false)
+                    }}
+                    className="w-full px-4 py-3 rounded-lg text-left font-medium text-red-500 hover:bg-red-500/10 flex items-center gap-2"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </div>
               ) : (
                 <Button
                   onClick={() => {
                     onNavigate("dashboard")
                     setMobileMenuOpen(false)
                   }}
-                  className="mt-2 gradient-accent text-primary-foreground"
+                  className="mt-2 gradient-accent text-primary-foreground w-full"
                 >
                   Get Started
                 </Button>
