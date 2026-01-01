@@ -88,27 +88,48 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
     utilities: 0,
     other: 0,
   })
+  // 1. AI Advisor Variables (Jo delete ho gaye the)
+  const [showAiAdvice, setShowAiAdvice] = useState(false)
+  const [aiAdviceText, setAiAdviceText] = useState("") 
+  const [isAiLoading, setIsAiLoading] = useState(false)
+
+  // 2. Save Modal Variables (Jo naye feature ke liye chahiye)
+  const [showSaveModal, setShowSaveModal] = useState(false)
+  const [isSavingData, setIsSavingData] = useState(false)
   const [risk, setRisk] = useState("balanced")
   const [plan, setPlan] = useState<FinancialPlan | null>(null)
   const [goalName, setGoalName] = useState("iPhone 16")
   const [goalPrice, setGoalPrice] = useState(80000)
-  const [showAiAdvice, setShowAiAdvice] = useState(false)
-  const [aiAdviceText, setAiAdviceText] = useState(""); // Store real advice
-  const [isAiLoading, setIsAiLoading] = useState(false); // Loading state
   const [emergencySaved, setEmergencySaved] = useState(0)
   // FETCH DATA ON LOAD
   useEffect(() => {
     const fetchUserData = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data, error } = await supabase
-          .from('user_profiles')
-          .select('monthly_income')
-          .eq('id', user.id)
+        // 👇 UPDATE: Yahan 'user_financials' hona chahiye (profiles nahi)
+        const { data } = await supabase
+          .from('user_financials') 
+          .select('*')
+          .eq('user_id', user.id)
           .single()
 
-        if (data && data.monthly_income) {
-          setIncome(Number(data.monthly_income))
+        if (data) {
+          // Agar data mila, tabhi load karo
+          setIncome(data.monthly_income || 0)
+          setExpenses(data.expenses || {})
+          setRisk(data.investment_style || "balanced")
+          
+          if (data.monthly_income > 0) {
+             // Calculate plan locally to show immediately
+             const totalExp = Object.values(data.expenses || {}).reduce((a: any, b: any) => a + Number(b), 0)
+             setPlan({
+                essentials: (data.expenses?.rent || 0) + (data.expenses?.utilities || 0),
+                discretionary: (data.expenses?.food || 0) + (data.expenses?.transport || 0) + (data.expenses?.other || 0),
+                savings: Math.max(0, data.monthly_income - totalExp),
+                split: getInvestmentSplit(data.investment_style || "balanced")
+             })
+             setStep(3)
+          }
         }
       }
     }
@@ -185,7 +206,7 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
       savings: targetSavings,
       split,
     })
-    setStep(3)
+    setShowSaveModal(true)
   }
 
   const pieData = plan
@@ -226,7 +247,55 @@ const finishDateString = completionDate.toLocaleString('default', { month: 'shor
   const emergencyTarget = income * 6
   const emergencyProgress = plan ? Math.min(100, ((plan.savings * 6) / emergencyTarget) * 100) : 0
   const monthsToGoal = plan && plan.savings > 0 ? goalPrice / plan.savings : 0
-// 🧠 Gemini AI Function (Paste this before 'return')
+// 👇 Step 2: Ye function Line 230 ke upar paste karein 👇
+
+const saveFinancialData = async () => {
+  setIsSavingData(true)
+  
+  // 1. Check karein ki User Logged In hai ya nahi
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    alert("⚠️ Save Failed: Aap Login nahi hain! Data save karne ke liye login karein.")
+    setIsSavingData(false)
+    return
+  }
+
+  console.log("Attempting save for User ID:", user.id)
+
+  // 2. Data Save karein
+  const { error } = await supabase
+    .from('user_financials')
+    .upsert({
+      user_id: user.id,
+      monthly_income: income,
+      expenses: expenses,
+      savings_goal: 0, 
+      investment_style: risk,
+      updated_at: new Date().toISOString()
+    })
+
+  if (error) {
+    // Agar error aaye to console aur screen dono par dikhao
+    console.error("Supabase Save Error:", error)
+    alert(`❌ Error: ${error.message}`)
+  } else {
+    // Success!
+    alert("✅ Profile Saved Successfully!")
+    setShowSaveModal(false)
+    setStep(3)
+  }
+  
+  setIsSavingData(false)
+}
+
+
+const handleSkipSave = () => {
+  setShowSaveModal(false)
+  setStep(3)
+}
+// 👆 Step 2 Khatam 👆
+  // 🧠 Gemini AI Function (Paste this before 'return')
 const fetchAiAdvice = async () => {
   if (showAiAdvice && aiAdviceText) {
      setShowAiAdvice(false); // Close if already open
@@ -258,13 +327,7 @@ const fetchAiAdvice = async () => {
   return (
     <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {userEmail && (
-          <div className="mb-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
-            <p className="text-sm text-accent">
-              Logged in as: <span className="font-semibold">{userEmail}</span>
-            </p>
-          </div>
-        )}
+       
 
         {/* Step Indicator */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -497,15 +560,32 @@ const fetchAiAdvice = async () => {
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setStep(1)} className="flex-1 h-14 text-lg border-border">
                   Back
-                </Button>
-                <Button
-                  onClick={analyzeBudget}
-                  disabled={totalExpenses > income}
-                  className="flex-1 h-14 text-lg gradient-accent text-background font-semibold"
-                >
-                  Analyze
-                  <Sparkles className="w-5 h-5 ml-2" />
-                </Button>
+                  </Button>
+                {/* ✅ UPDATED ANALYZE BUTTON (No Auto-Save) */}
+          <Button
+            onClick={() => {
+              // 1. Totals Calculate karein
+              const totalExp = Object.values(expenses).reduce((a: any, b: any) => a + Number(b), 0)
+              
+              // 2. Result (Plan) Taiyaar karein
+              const targetSavings = Math.max(0, income - totalExp)
+              const essentials = (Number(expenses.rent) || 0) + (Number(expenses.utilities) || 0)
+              const discretionary = (Number(expenses.food) || 0) + (Number(expenses.transport) || 0) + (Number(expenses.subscriptions) || 0) + (Number(expenses.other) || 0)
+
+              setPlan({
+                essentials,
+                discretionary,
+                savings: targetSavings,
+                split: getInvestmentSplit(risk),
+              })
+
+              // 3. AB RUK JAYEIN! Sirf Modal kholiye (Database call mat karna)
+              setShowSaveModal(true)
+            }}
+            className="w-full h-14 text-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-500/20"
+          >
+            Analyze <Sparkles className="w-5 h-5 ml-2" />
+          </Button>
               </div>
             </div>
         )}
@@ -1007,18 +1087,69 @@ const fetchAiAdvice = async () => {
                   </div>
                 </div>
 
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setStep(1)
-                    setPlan(null)
-                  }}
-                  className="w-full h-14 text-lg border-border"
-                >
-                  Start Over
-                </Button>
+                <div className="flex flex-col gap-3 mt-6 border-t border-white/10 pt-6">
+  
+  {/* 1. EDIT BUTTON: Wapas Step 2 par le jayega */}
+  <Button
+    onClick={() => setStep(2)} 
+    className="w-full h-14 text-lg gradient-accent text-background font-semibold shadow-lg hover:shadow-emerald-500/20 transition-all"
+  >
+    <ChevronRight className="w-5 h-5 rotate-180 mr-2" /> {/* Back Arrow Icon */}
+    Edit Income & Expenses
+  </Button>
+
+  {/* 2. RESET BUTTON: Sab naya shuru karega */}
+  <Button
+    variant="ghost"
+    onClick={() => {
+      setStep(1)
+      setPlan(null)
+    }}
+    className="w-full h-12 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+  >
+    Start Fresh Calculation
+  </Button>
+</div>
             </div>
         )}
+        {/* --- STEP 4: SAVE DATA MODAL --- */}
+      {showSaveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
+            <div className="bg-zinc-900 border border-white/10 p-6 rounded-2xl max-w-sm w-full shadow-2xl space-y-4">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto">
+                    <Sparkles className="w-6 h-6 text-emerald-500" />
+                </div>
+                <div className="text-center">
+                    <h3 className="text-xl font-bold text-white">Save your Profile?</h3>
+                    <p className="text-gray-400 text-sm mt-2">
+                        Do you want to save this data securely? This allows Monexi to track your progress next time.
+                    </p>
+                </div>
+                <div className="flex gap-3 pt-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={handleSkipSave} 
+                      className="flex-1 border-white/10 hover:bg-white/5 text-gray-300"
+                    >
+                        No, skip
+                    </Button>
+                    <Button 
+                      onClick={saveFinancialData} 
+                      disabled={isSavingData} 
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+                    >
+                        {isSavingData ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                            Saving...
+                          </>
+                        ) : "Yes, Save"}
+                    </Button>
+                </div>
+            </div>
+        </div>
+      )}
+      {/* --- END OF MODAL --- */}
       </div>
     </div>
   )
