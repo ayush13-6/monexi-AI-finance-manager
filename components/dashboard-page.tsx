@@ -412,23 +412,14 @@ const fetchAiAdvice = async () => {
               </div>
             </div>
 
+            {/* ✅ FIXED STEP 1 BUTTON: Seedha Step 2 par jao (No Saving) */}
             <Button
-              onClick={handleSaveAndContinue}
-              disabled={isSaving}
-              className="w-full h-14 text-lg gradient-accent text-background font-semibold"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  Continue
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </>
-              )}
-            </Button>
+                    onClick={() => setStep(2)}
+                    disabled={!income} 
+                    className="w-full h-14 text-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-500/20"
+                  >
+                    Next Step <ChevronRight className="w-5 h-5 ml-2" />
+                  </Button>
           </div>
         )}
 
@@ -1098,17 +1089,41 @@ const fetchAiAdvice = async () => {
     Edit Income & Expenses
   </Button>
 
-  {/* 2. RESET BUTTON: Sab naya shuru karega */}
-  <Button
-    variant="ghost"
-    onClick={() => {
-      setStep(1)
-      setPlan(null)
-    }}
-    className="w-full h-12 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
-  >
-    Start Fresh Calculation
-  </Button>
+ {/* ✅ Start Fresh Button with DEBUGGING */}
+ {/* ✅ FINAL CLEAN START FRESH BUTTON */}
+ <Button
+                    variant="ghost"
+                    onClick={async () => {
+                      // 1. Confirmation (Galti se click na ho)
+                      if (!confirm("Are you sure? This will clear all your data permanently.")) return;
+
+                      try {
+                        // 2. Database Clear Karein
+                        const { data: { user } } = await supabase.auth.getUser();
+                        if (user) {
+                          await supabase
+                            .from('user_financials')
+                            .delete()
+                            .eq('user_id', user.id);
+                        }
+                      } catch (error) {
+                        console.error("Error clearing data:", error);
+                      }
+
+                      // 3. Screen Reset Karein (Instant Feedback)
+                      setStep(1);
+                      setPlan(null);
+                      setIncome(0);
+                      setExpenses({});
+                      setRisk("balanced");
+                      
+                      // Optional: Chhota sa notification
+                      // alert("Data cleared successfully!"); 
+                    }}
+                    className="w-full h-12 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+                  >
+                    Start Fresh Calculation
+                  </Button>
 </div>
             </div>
         )}
