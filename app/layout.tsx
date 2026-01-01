@@ -12,13 +12,18 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Monexi - Next Gen Personal Finance",
-  description:
-    "Smart Budgeting. AI Advice. Real-time Market Tracking. Experience the future of personal finance management.",
-    verification: {
-      google: 'WVS6iIGzckZZXfDCVwKiELDlegqRuY4NWlhEkfsN5tM',
-    },
-    generator: "v0.app",
-}
+  description: "Smart Budgeting. AI Advice. Real-time Market Tracking...",
+  verification: {
+    google: 'WVS6iIGzckZZXfDCVwKiELDlegqRuY4NWlhEkfsN5tM',
+  },
+  // 👇 Niche wala code copy karke paste karein
+  icons: {
+    icon: '/monexi.png',      // Browser Tab ke liye
+    shortcut: '/monexi.png',  // Desktop Shortcut ke liye
+    apple: '/monexi.png',     // iPhone Homescreen ke liye
+  },
+  generator: "v0.app",
+};
 
 export const viewport: Viewport = {
   width: "device-width",
