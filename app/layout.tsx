@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   verification: {
     google: 'WVS6iIGzckZZXfDCVwKiELDlegqRuY4NWlhEkfsN5tM',
   },
-  // 👇 Niche wala code copy karke paste karein
+  
   icons: {
-    icon: '/monexi.png',      // Browser Tab ke liye
-    shortcut: '/monexi.png',  // Desktop Shortcut ke liye
-    apple: '/monexi.png',     // iPhone Homescreen ke liye
+    icon: '/monexi.png',      
+    shortcut: '/monexi.png',  // Desktop Shortcut 
+    apple: '/monexi.png',     // iPhone Homescreen 
   },
   generator: "v0.app",
 };

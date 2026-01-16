@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@/lib/supabase-client" // Ensure this path is correct
+import { createClient } from "@/lib/supabase-client" 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,11 +24,11 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Loader2,
-  Bot             // ✅ Bot bhi yahan add kar diya
+  Bot             
 } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts"
 
-// Initialize Supabase Client
+
 const supabase = createClient()
 
 interface FinancialPlan {
@@ -88,12 +88,12 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
     utilities: 0,
     other: 0,
   })
-  // 1. AI Advisor Variables (Jo delete ho gaye the)
+  // 1. AI Advisor Variables 
   const [showAiAdvice, setShowAiAdvice] = useState(false)
   const [aiAdviceText, setAiAdviceText] = useState("") 
   const [isAiLoading, setIsAiLoading] = useState(false)
 
-  // 2. Save Modal Variables (Jo naye feature ke liye chahiye)
+  // 2. Save Modal Variables 
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [isSavingData, setIsSavingData] = useState(false)
   const [risk, setRisk] = useState("balanced")
@@ -106,7 +106,7 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
     const fetchUserData = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        // 👇 UPDATE: Yahan 'user_financials' hona chahiye (profiles nahi)
+        
         const { data } = await supabase
           .from('user_financials') 
           .select('*')
@@ -114,13 +114,13 @@ export function DashboardPage({ userEmail }: DashboardPageProps) {
           .single()
 
         if (data) {
-          // Agar data mila, tabhi load karo
+          
           setIncome(data.monthly_income || 0)
           setExpenses(data.expenses || {})
           setRisk(data.investment_style || "balanced")
           
           if (data.monthly_income > 0) {
-             // Calculate plan locally to show immediately
+            
              const totalExp = Object.values(data.expenses || {}).reduce((a: any, b: any) => a + Number(b), 0)
              setPlan({
                 essentials: (data.expenses?.rent || 0) + (data.expenses?.utilities || 0),
@@ -236,7 +236,7 @@ const suggestedEmergency = monthlySavings - suggestedSIP; // 30% for Emergency
 
 const emergencyGoal = totalExpenses * 6;
 
-// Ab monthsToBuild sirf 30% amount ke hisaab se calculate hoga
+
 const monthsToBuild = suggestedEmergency > 0 ? emergencyGoal / suggestedEmergency : 0;
 
 const completionDate = new Date();
@@ -247,12 +247,12 @@ const finishDateString = completionDate.toLocaleString('default', { month: 'shor
   const emergencyTarget = income * 6
   const emergencyProgress = plan ? Math.min(100, ((plan.savings * 6) / emergencyTarget) * 100) : 0
   const monthsToGoal = plan && plan.savings > 0 ? goalPrice / plan.savings : 0
-// 👇 Step 2: Ye function Line 230 ke upar paste karein 👇
+
 
 const saveFinancialData = async () => {
   setIsSavingData(true)
   
-  // 1. Check karein ki User Logged In hai ya nahi
+
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
@@ -276,7 +276,7 @@ const saveFinancialData = async () => {
     })
 
   if (error) {
-    // Agar error aaye to console aur screen dono par dikhao
+   
     console.error("Supabase Save Error:", error)
     alert(`❌ Error: ${error.message}`)
   } else {
@@ -294,7 +294,7 @@ const handleSkipSave = () => {
   setShowSaveModal(false)
   setStep(3)
 }
-// 👆 Step 2 Khatam 👆
+
   // 🧠 Gemini AI Function (Paste this before 'return')
 const fetchAiAdvice = async () => {
   if (showAiAdvice && aiAdviceText) {
@@ -381,7 +381,7 @@ const fetchAiAdvice = async () => {
                 <IndianRupee className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                               type="number"
-                              // 👇 Yahan change kiya hai: 0 ko hide karne ke liye
+                             
                               value={income === 0 ? "" : income}
                               onChange={(e) => setIncome(Number(e.target.value))}
                               placeholder="0" 
@@ -412,7 +412,7 @@ const fetchAiAdvice = async () => {
               </div>
             </div>
 
-            {/* ✅ FIXED STEP 1 BUTTON: Seedha Step 2 par jao (No Saving) */}
+            {/* ✅ FIXED STEP 1 BUTTON:  */}
             <Button
                     onClick={() => setStep(2)}
                     disabled={!income} 
@@ -492,13 +492,13 @@ const fetchAiAdvice = async () => {
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                             <Input
   type="number"
-  // ✅ MAIN FIX: Agar value 0 hai ya undefined, toh empty string '' dikhao
-  // Isse wo chipka hua '0' hat jayega aur user direct '232' type kar payega
+  
+  
   value={expenses[category.id] || ''}
   
   onChange={(e) => {
     const val = e.target.value;
-    // Agar user poora delete kar de, toh wapas 0 set kar do
+   
     const numVal = val === '' ? 0 : parseFloat(val);
     
     setExpenses(prev => ({
@@ -506,7 +506,7 @@ const fetchAiAdvice = async () => {
       [category.id]: numVal
     }));
   }}
-  placeholder="0" // Ye 0 tab dikhega jab box khali hoga (looks better)
+  placeholder="0" 
   className="pl-8 bg-secondary border-border text-foreground font-semibold"
 />
                           </div>
@@ -570,7 +570,7 @@ const fetchAiAdvice = async () => {
                 split: getInvestmentSplit(risk),
               })
 
-              // 3. AB RUK JAYEIN! Sirf Modal kholiye (Database call mat karna)
+            
               setShowSaveModal(true)
             }}
             className="w-full h-14 text-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-500/20"
@@ -733,17 +733,17 @@ const fetchAiAdvice = async () => {
       maximumFractionDigits: 0,
     })
   }
-  // ✅ UPDATE: Background ko White aur Text ko Black kiya hai visibility ke liye
+  
   contentStyle={{
-    backgroundColor: "#ffffff", // White background
-    border: "none",             // Border hata diya cleaner look ke liye
-    borderRadius: "12px",       // Thoda rounded corners
+    backgroundColor: "#ffffff", 
+    border: "none",             
+    borderRadius: "12px",       
     color: "#000000",           // Text Black
-    boxShadow: "0 4px 20px rgba(0,0,0,0.5)", // Shadow taaki graph ke upar utha hua lage
+    boxShadow: "0 4px 20px rgba(0,0,0,0.5)", // Shadow 
     padding: "10px 16px",
     fontWeight: "bold"
   }}
-  itemStyle={{ color: "#000" }} // Andar ka text color bhi black force kiya
+  itemStyle={{ color: "#000" }} 
 />
                       </PieChart>
                     </ResponsiveContainer>
@@ -983,7 +983,7 @@ const fetchAiAdvice = async () => {
  </div>
              </div>
          
-        {/* 👆 YAHAN GRID END HUA */}
+        {/*  GRID END */}
 {/* --- DUAL ACTION CARDS (SIP + STOCKS) --- */}
 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-slide-up">
            
@@ -1045,8 +1045,8 @@ const fetchAiAdvice = async () => {
             Get <span className="tex t-white font-bold">AI-driven</span> spending analytics.
             </p>
       </div>
-    </div>   {/* Ye Card ko band karega */}
-  </div>     {/* Ye Main Grid ko band karega (Jo abhi missing hai) */}
+    </div>   {/*  Card  */}
+  </div>     {/*  */}
 
   {/* -------------------------------------------------- */}
        
@@ -1080,7 +1080,7 @@ const fetchAiAdvice = async () => {
 
                 <div className="flex flex-col gap-3 mt-6 border-t border-white/10 pt-6">
   
-  {/* 1. EDIT BUTTON: Wapas Step 2 par le jayega */}
+  {/* 1. EDIT BUTTON:  */}
   <Button
     onClick={() => setStep(2)} 
     className="w-full h-14 text-lg gradient-accent text-background font-semibold shadow-lg hover:shadow-emerald-500/20 transition-all"
@@ -1094,11 +1094,9 @@ const fetchAiAdvice = async () => {
  <Button
                     variant="ghost"
                     onClick={async () => {
-                      // 1. Confirmation (Galti se click na ho)
                       if (!confirm("Are you sure? This will clear all your data permanently.")) return;
 
                       try {
-                        // 2. Database Clear Karein
                         const { data: { user } } = await supabase.auth.getUser();
                         if (user) {
                           await supabase
@@ -1110,14 +1108,13 @@ const fetchAiAdvice = async () => {
                         console.error("Error clearing data:", error);
                       }
 
-                      // 3. Screen Reset Karein (Instant Feedback)
                       setStep(1);
                       setPlan(null);
                       setIncome(0);
                       setExpenses({});
                       setRisk("balanced");
                       
-                      // Optional: Chhota sa notification
+                      
                       // alert("Data cleared successfully!"); 
                     }}
                     className="w-full h-12 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"

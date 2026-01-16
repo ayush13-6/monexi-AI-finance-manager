@@ -20,13 +20,12 @@ export default function Home() {
   const [session, setSession] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   
-  // Ye state batayega ki Login+Password flow poora hua ya nahi
+  
   const [authFlowCompleted, setAuthFlowCompleted] = useState(false)
   
-  // Ye ensure karega ki hum session check sirf "First Load" par karein (Refresh case)
+  
   const initialCheckDone = useRef(false)
 
-  // Supabase client ko stable rakhne ke liye useState use karein
   const [supabase] = useState(() => createClient())
 
   useEffect(() => {
@@ -36,11 +35,9 @@ export default function Home() {
         setSession(currentSession)
 
         // LOGIC FIX:
-        // Sirf tab auto-complete karo agar ye PEHLI BAAR page load ho raha hai
-        // Aur user pehle se logged in hai (Refresh kiya hai).
         if (!initialCheckDone.current) {
           if (currentSession) {
-            setAuthFlowCompleted(true) // Purana user hai, jaane do
+            setAuthFlowCompleted(true) 
           }
           initialCheckDone.current = true // Mark check as done
         }
@@ -57,9 +54,7 @@ export default function Home() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession)
       
-      // Note: Hum yahan authFlowCompleted ko true NAHI karenge.
-      // Agar user ne abhi OTP verify kiya, to 'newSession' aayega, 
-      // par 'authFlowCompleted' FALSE rahega -> Isliye AuthPage dikhta rahega (Set Password ke liye).
+     
       
       if (!newSession) {
         setAuthFlowCompleted(false)
@@ -70,7 +65,7 @@ export default function Home() {
     return () => subscription?.unsubscribe()
   }, [supabase])
 
-  // Jab AuthPage bole ki "Haan Password Set Ho Gaya"
+  
   const handleAuthSuccess = () => {
     setAuthFlowCompleted(true)
     setCurrentPage("dashboard")
@@ -87,10 +82,9 @@ export default function Home() {
   // --- RENDER LOGIC ---
   const isProtectedPage = ["dashboard", "tools", "ai-advisor"].includes(currentPage)
   
-  // Agar Protected Page hai... AUR (Session nahi hai YA Flow complete nahi hua)
-  // To hum AuthPage dikhayenge.
+  
+  //  AuthPage .
   if (isProtectedPage && (!session || !authFlowCompleted)) {
-    // onAuthSuccess tab call hoga jab password set ho jayega
     return <AuthPage onAuthSuccess={handleAuthSuccess} />
   }
 

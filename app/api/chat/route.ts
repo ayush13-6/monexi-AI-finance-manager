@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { type NextRequest, NextResponse } from "next/server"
 
-// DHAYAN DEIN: API Key .env.local mein honi chahiye
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
@@ -121,7 +121,7 @@ KNOWLEDGE ABOUT INDIAN FINANCIAL PRODUCTS:
 WHEN USERS ASK NON-FINANCE QUESTIONS:
 Politely redirect: "That's interesting, but I'm specifically trained to help with personal finance. Let's get back to your financial goals — what would you like to discuss?"
 
-Remember: You are not just an AI — you are the user's trusted long-term money partner. Be encouraging, patient, and always aim to empower them with knowledge.`; // <--- AB YAHAN THEEK SE BAND HAI
+Remember: You are not just an AI — you are the user's trusted long-term money partner. Be encouraging, patient, and always aim to empower them with knowledge.`; 
 
     const result = await model.generateContent({
       contents: [
