@@ -37,8 +37,7 @@ export async function GET(request: Request) {
   };
 
   // 3. LOGIC: Realistic Data Generator
-  // Agar Amadeus Test API data nahi de paati (kyunki route supported nahi hai),
-  // toh yeh function realistic flights banata hai taaki UI khali na dikhe.
+ 
   const generateMarketFlights = (basePrice: number) => {
     return [
       {
@@ -101,20 +100,20 @@ export async function GET(request: Request) {
     }
 
     // 5. HYBRID MERGE
-    // Agar flights kam hain (ya 0 hain kyunki sandbox hai), toh smart data mix karo
+    
     if (flights.length < 3) {
       const extraFlights = generateMarketFlights(marketPrice);
       flights = [...flights, ...extraFlights];
     }
 
-    // Saste se mehnga sort karo
+    
     flights.sort((a, b) => a.price - b.price);
 
     return NextResponse.json({ flights });
 
   } catch (error) {
     console.error("Hybrid Engine Error:", error);
-    // Crash hone par bhi safe data dikhao
+    
     return NextResponse.json({ 
       flights: generateMarketFlights(6000) 
     });
