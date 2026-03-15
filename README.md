@@ -9,13 +9,8 @@
 
 Your project is live at:
 
-**[https://vercel.com/hs-projects-311a9c78/v0-streamlit-dashboard-css](https://vercel.com/hs-projects-311a9c78/v0-streamlit-dashboard-css)**
+**[https://www.monexi.in](https://www.monexi.in)**
 
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.app/chat/d9ydvAoxjET](https://v0.app/chat/d9ydvAoxjET)**
 
 ## How It Works
 
